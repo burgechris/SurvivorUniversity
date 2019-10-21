@@ -11,12 +11,12 @@
 }
 else
 {
-  <h4>Course the item belongs to:</h4>
+  <h4>Enrolled courses:</h4>
   <ul>
   @foreach(var join in Model.Courses)
   {
     <li>@join.Course.Name</li>
-    @using (Html.BeginForm("DeleteCourse", "Items"))
+    @using (Html.BeginForm("DeleteCourse", "Students"))
     {
       @Html.Hidden("joinId", @join.EnrollmentId)
       <input type="submit" value="Delete"/>
