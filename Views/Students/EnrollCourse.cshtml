@@ -1,0 +1,17 @@
+@model University.Models.Student
+<h2>Add a Course</h2>
+
+<h4>Enroll this Student into a Course: @Html.DisplayFor(model => model.Name)</h4>
+
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(model => model.StudentId)
+
+
+    @Html.Label("Select Course")
+    @Html.DropDownList("CourseId")
+
+    <input type="submit" value="save"/>
+} 
+
+<p>@Html.ActionLink("Back to list", "Index")</p>
