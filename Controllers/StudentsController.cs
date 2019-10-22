@@ -4,21 +4,31 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace University.Controllers
 {
+    [Authorize]
     public class StudentsController : Controller
     {
         private readonly UniversityContext _db;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public StudentsController(UniversityContext db)
+        public StudentsController(UserManager<ApplicationUser> userManager, UniversityContext db)
         {
+            _userManager = userManager;    
             _db = db;
         }
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View(_db.Students.ToList());
+            var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var currentUser = await _userManager.FindByIdAsync(userId);
+            var userItems = _db.Students.Where(entry => entry.User.Id == currentUser.Id);
+            return View(userItems);
         }
 
         public ActionResult Create()
@@ -28,8 +38,11 @@ namespace University.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(Student student, int CourseId)
+        public async Task<ActionResult> Create(Student student, int CourseId)
         {
+            var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var currentUser = await _userManager.FindByIdAsync(userId);
+            student.User = currentUser;
             _db.Students.Add(student);
             if (CourseId != 0)
             {
@@ -38,7 +51,6 @@ namespace University.Controllers
             _db.SaveChanges();
             return RedirectToAction("Index");
         }
-
 
         public ActionResult Details(int id)
         {

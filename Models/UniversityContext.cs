@@ -1,8 +1,9 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace University.Models
 {
-    public class UniversityContext : DbContext 
+    public class UniversityContext : IdentityDbContext<ApplicationUser> 
     {
         public virtual DbSet<Course> Courses { get; set; }
         public DbSet<Student> Students { get; set; }

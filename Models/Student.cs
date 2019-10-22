@@ -12,6 +12,7 @@ namespace University.Models
         public int StudentId { get; set; }
         public string Name { get; set; }
         public bool Enrolled { get; set; }
+        public virtual ApplicationUser User { get; set; }
 
         public ICollection<Enrollment> Courses { get; set; }
     }
